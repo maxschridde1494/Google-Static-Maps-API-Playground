@@ -1,8 +1,9 @@
 const MAPSURLSTART = "https://maps.googleapis.com/maps/api/staticmap?";
 const MAPSAPIKEY = "AIzaSyChcVQ9xCRNiChe9YS68W3czxBzT3xCdMI" //app name: CS160-Walkie
 
-var testLAAddress = "Pershing+Square,Los+Angeles,CA"
-var testHomeAddress = "911+North+Evergreen+Street,Burbank,CA"
+var testLAAddress = "Pershing+Square,Los+Angeles,CA";
+var testAddress1 = "911+North+Evergreen+Street,Burbank,CA";
+var testAddress2 = "Bob's+Big+Boy,Burbank,CA";
 
 let textStyle = new Style({ font: "bold 50px", color: "white" });
 let MainContainer = Container.template($ => ({
@@ -31,8 +32,10 @@ application.behavior = new AppBehavior();
 
 function createMapsUrl(){
     var requestURL = MAPSURLSTART
-                 + "center=" + testHomeAddress
+                 + "center=" + testAddress1
                  + "&zoom=13" + "&size=400x400"
+                 + "&markers=color:blue|label:S|" + testAddress1
+                 + "&markers=color:green|label:M|" + testAddress2
                  + "&maptype=roadmap"
                  + "&key=" + MAPSAPIKEY;
     trace(requestURL+"\n");
