@@ -1,18 +1,59 @@
-/*
- *     Copyright (C) 2010-2016 Marvell International Ltd.
- *     Copyright (C) 2002-2010 Kinoma, Inc.
- *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
- */
-trace("Hello, World!\n");
-debugger;
+const MAPSURLSTART = "https://maps.googleapis.com/maps/api/staticmap?";
+const MAPSAPIKEY = "AIzaSyChcVQ9xCRNiChe9YS68W3czxBzT3xCdMI" //app name: CS160-Walkie
+
+var testLAAddress = "Pershing+Square,Los+Angeles,CA"
+var testHomeAddress = "911+North+Evergreen+Street,Burbank,CA"
+
+let textStyle = new Style({ font: "bold 50px", color: "white" });
+let MainContainer = Container.template($ => ({
+    name: 'main',
+    top: 0, bottom: 0, left: 0, right: 0,
+    skin: new Skin({ fill: $.backgroundColor }),
+    contents: [
+        Label($, {
+            top: 70, bottom: 70, left: 70, right: 70,
+            style: textStyle,  string: $.string
+        }),
+    ],
+}));
+
+class AppBehavior extends Behavior {
+    onLaunch(application) {
+        application.add(new MainContainer({ string: "Ready!", backgroundColor: "#7DBF2E" }));
+        var mapURL = createMapsUrl()
+        getMapsImg(mapURL, function(image){
+            let img = new Picture({left: 5, right: 5, top: 5, bottom: 5, url: image});
+            application.main.add(img)
+        });
+    }
+}
+application.behavior = new AppBehavior();
+
+function createMapsUrl(){
+    var requestURL = MAPSURLSTART
+                 + "center=" + testHomeAddress
+                 + "&zoom=13" + "&size=400x400"
+                 + "&maptype=roadmap"
+                 + "&key=" + MAPSAPIKEY;
+    trace(requestURL+"\n");
+    return requestURL
+}
+
+function getMapsImg(url, uiCallback){
+    var message = new Message(url);
+    var promise = message.invoke(Message.JSON);
+    promise.then(json => {
+        if (0 == message.error && 200 == message.status){
+            try{
+                trace(json + '\n');
+                uiCallback(json)
+            }
+            catch (e) {
+                throw('Web service responded with invalid JSON!\n');
+              }
+        }
+        else {
+          trace('Request Failed - Raw Response Body: *' + '\n' +text+'*'+'\n');
+        }
+    });
+}
