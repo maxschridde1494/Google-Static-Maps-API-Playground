@@ -4,6 +4,7 @@ const MAPSAPIKEY = "AIzaSyChcVQ9xCRNiChe9YS68W3czxBzT3xCdMI" //app name: CS160-W
 var testLAAddress = "Pershing+Square,Los+Angeles,CA";
 var testAddress1 = "911+North+Evergreen+Street,Burbank,CA";
 var testAddress2 = "Bob's+Big+Boy,Burbank,CA";
+var testAddress3 = "Warner+Brother's+Studio+Tour,Burbank,CA";
 
 let textStyle = new Style({ font: "bold 50px", color: "white" });
 let MainContainer = Container.template($ => ({
@@ -35,7 +36,8 @@ function createMapsUrl(){
                  + "center=" + testAddress1
                  + "&zoom=13" + "&size=400x400"
                  + "&markers=color:blue|label:S|" + testAddress1
-                 + "&markers=color:green|label:M|" + testAddress2
+                 + "&markers=color:green|label:M|" + testAddress3
+                 + "&path=color:0x0000ff80|weight:1|" + testAddress1 + "|" + testAddress3
                  + "&maptype=roadmap"
                  + "&key=" + MAPSAPIKEY;
     trace(requestURL+"\n");
